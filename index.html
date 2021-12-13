@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: inherit;
+      }
+
+      html {
+        font-size: 62.5%;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 400;
+        height: 100vh;
+        color: #333;
+        background-image: linear-gradient(
+          to top left,
+          #753682 0%,
+          #bf2e34 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* LAYOUT */
+      main {
+        position: relative;
+        width: 100rem;
+        height: 60rem;
+        background-color: rgba(255, 255, 255, 0.35);
+        backdrop-filter: blur(200px);
+        filter: blur();
+        box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.25);
+        border-radius: 9px;
+        overflow: hidden;
+        display: flex;
+      }
+
+      .player {
+        flex: 50%;
+        padding: 9rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: all 0.75s;
+      }
+
+      /* ELEMENTS */
+      .name {
+        position: relative;
+        font-size: 4rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        word-spacing: 2px;
+        font-weight: 300;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .score {
+        font-size: 8rem;
+        font-weight: 300;
+        color: #c7365f;
+        margin-bottom: auto;
+      }
+
+      .player--active {
+        background-color: rgba(255, 255, 255, 0.4);
+      }
+      .player--active .name {
+        font-weight: 700;
+      }
+      .player--active .score {
+        font-weight: 400;
+      }
+
+      .player--active .current {
+        opacity: 1;
+      }
+
+      .current {
+        background-color: #c7365f;
+        opacity: 0.8;
+        border-radius: 9px;
+        color: #fff;
+        width: 65%;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.75s;
+      }
+
+      .current-label {
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        font-size: 1.7rem;
+        color: #ddd;
+      }
+
+      .current-score {
+        font-size: 3.5rem;
+      }
+
+      /* ABSOLUTE POSITIONED ELEMENTS */
+      .btn {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #444;
+        background: none;
+        border: none;
+        font-family: inherit;
+        font-size: 1.8rem;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-weight: 400;
+        transition: all 0.2s;
+
+        background-color: white;
+        background-color: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(10px);
+
+        padding: 0.7rem 2.5rem;
+        border-radius: 50rem;
+        box-shadow: 0 1.75rem 3.5rem rgba(0, 0, 0, 0.1);
+      }
+
+      .btn::first-letter {
+        font-size: 2.4rem;
+        display: inline-block;
+        margin-right: 0.7rem;
+      }
+
+      .btn--new {
+        top: 4rem;
+      }
+      .btn--roll {
+        top: 39.3rem;
+      }
+      .btn--hold {
+        top: 46.1rem;
+      }
+
+      .btn:active {
+        transform: translate(-50%, 3px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+      }
+
+      .btn:focus {
+        outline: none;
+      }
+
+      .dice {
+        position: absolute;
+        left: 50%;
+        top: 16.5rem;
+        transform: translateX(-50%);
+        height: 10rem;
+        box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.2);
+      }
+
+      .player--winner {
+        background-color: #2f2f2f;
+      }
+
+      .player--winner .name {
+        font-weight: 700;
+        color: #c7365f;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @media (max-width: 767px) {
+        main {
+          max-width: 45rem;
+          width: 90vw;
+          height: 85vh;
+          flex-direction: column;
+          overflow: visible;
+        }
+        .player {
+          height: 50%;
+          padding: 5rem;
+        }
+        .name {
+          font-size: 3rem;
+        }
+        .score {
+          font-size: 3.6rem;
+        }
+        .current {
+          width: 7.5rem;
+          padding: 1.5rem 0.75rem;
+        }
+        .current-label {
+          font-size: 1rem;
+          text-transform: capitalize;
+        }
+        .current-score {
+          font-size: 1.5rem;
+        }
+        .dice {
+          height: 5rem;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+        .btn {
+          padding: 0.5rem 3rem;
+          font-size: 0.75rem;
+          border-radius: 50%;
+        }
+        .btn span {
+          font-weight: bold;
+          display: block;
+        }
+        .btn::first-letter {
+          font-size: 1.2rem;
+          margin: 0;
+        }
+        .btn--new {
+          top: -7.5%;
+        }
+        .btn--roll {
+          top: 50%;
+          left: 10%;
+          padding: 2.5%;
+          transform: translate(-50%, -50%);
+        }
+        .btn--hold {
+          top: 50%;
+          left: 90%;
+          padding: 1% 4%;
+          transform: translate(-50%, -50%);
+        }
+        .btn:active {
+          transform: translate(-50%, -25%);
+        }
+        .btn--new:active {
+          transform: translate(-50%, 25%);
+        }
+      }
+
+      @media (max-height: 479px) {
+        main {
+          width: 90vw;
+          max-width: 90vw;
+          height: 80vh;
+          flex-direction: row;
+          overflow: visible;
+        }
+        .player {
+          padding: 5rem;
+          height: 100%;
+        }
+        .name {
+          font-size: 2rem;
+        }
+        .score {
+          font-size: 2.4rem;
+        }
+        .current {
+          width: 7.5rem;
+          padding: 0.5rem 1rem;
+        }
+        .current-label {
+          font-size: 1rem;
+          text-transform: capitalize;
+        }
+        .current-score {
+          font-size: 1rem;
+        }
+        .dice {
+          top: 40%;
+          height: 5rem;
+        }
+        .btn {
+          font-size: 75%;
+          width: 10%;
+          border-radius: 5rem;
+          padding: 1rem 0.25rem;
+        }
+        .btn::first-letter {
+          font-size: 90%;
+        }
+        .btn--new {
+          top: 2rem;
+        }
+        .btn--roll {
+          top: 70%;
+          left: 50%;
+        }
+        .btn--hold {
+          top: 85%;
+          left: 50%;
+        }
+      }
+    </style>
+    <title>Pig Game</title>
+  </head>
+  <body>
+    <main>
+      <section class="player player--0 player--active">
+        <h2 class="name" id="name--0">Player 1</h2>
+        <p class="score" id="score--0">43</p>
+        <div class="current">
+          <p class="current-label">Current</p>
+          <p class="current-score" id="current--0">0</p>
+        </div>
+      </section>
+      <section class="player player--1">
+        <h2 class="name" id="name--1">Player 2</h2>
+        <p class="score" id="score--1">24</p>
+        <div class="current">
+          <p class="current-label">Current</p>
+          <p class="current-score" id="current--1">0</p>
+        </div>
+      </section>
+
+      <img src="dice-5.png" alt="Playing dice" class="dice" />
+      <button class="btn btn--new">🔄<span>New game</span></button>
+      <button class="btn btn--roll">🎲<span>Roll dice</span></button>
+      <button class="btn btn--hold">📥<span>Hold score</span></button>
+    </main>
+    <script>
+      'use strict';
+
+      const image = document.querySelector('.dice');
+      image.classList.add('hidden');
+
+      const score0El = (document.getElementById('score--0').textContent = 0);
+      const score1El = (document.getElementById('score--1').textContent = 0);
+
+      const current0El = document.getElementById('current--0');
+      const current1El = document.getElementById('current--1');
+
+      const player0El = document.querySelector('.player--0');
+      const player1El = document.querySelector('.player--1');
+
+      const btnRoll = document.querySelector('.btn--roll');
+      const btnHold = document.querySelector('.btn--hold');
+      const btnNew = document.querySelector('.btn--new');
+
+      let scores = [0, 0];
+      let currentScore = 0;
+      let activePlayer = 0;
+
+      let playing = true;
+
+      const switchPlayer = function () {
+        // Reset score of either players
+        currentScore = 0;
+        document.getElementById(`current--${activePlayer}`).textContent = 0;
+        // Switch player
+        activePlayer = activePlayer === 0 ? 1 : 0;
+        // Visual effects
+        player0El.classList.toggle('player--active');
+        player1El.classList.toggle('player--active');
+      };
+
+      btnRoll.addEventListener('click', function () {
+        if (playing) {
+          const random = Math.trunc(Math.random() * 6 + 1);
+          image.classList.remove('hidden');
+          image.src = `dice-${random}.png`;
+          if (random !== 1) {
+            currentScore += random;
+            document.getElementById(`current--${activePlayer}`).textContent =
+              currentScore;
+          } else {
+            switchPlayer();
+          }
+        }
+      });
+
+      btnHold.addEventListener('click', function () {
+        if (playing) {
+          scores[activePlayer] += currentScore;
+          document.getElementById(`score--${activePlayer}`).textContent =
+            scores[activePlayer];
+          if (scores[activePlayer] >= 100) {
+            playing = false;
+            document
+              .querySelector(`.player--${activePlayer}`)
+              .classList.add('player--winner');
+            document
+              .querySelector(`.player--${activePlayer}`)
+              .classList.remove('player--active');
+          } else {
+            switchPlayer();
+          }
+        }
+      });
+
+      btnNew.addEventListener('click', function () {
+        image.classList.add('hidden');
+        document.getElementById(`current--0`).textContent = 0;
+        document.getElementById(`current--1`).textContent = 0;
+        currentScore = 0;
+        document.getElementById(`score--0`).textContent = 0;
+        document.getElementById(`score--1`).textContent = 0;
+        scores = [0, 0];
+        document
+          .querySelector(`.player--${activePlayer}`)
+          .classList.remove('player--winner');
+        document.querySelector(`.player--0`).classList.add('player--active');
+        playing = true;
+      });
+    </script>
+  </body>
+</html>
